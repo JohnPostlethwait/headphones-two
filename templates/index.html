@@ -1,0 +1,138 @@
+<%inherit file="base.html"/>
+<%!
+  from headphones import models
+  from headphones import helpers
+%>
+
+<%def name="headerIncludes()">
+  <div id="subhead_container">
+    <ul id="subhead_menu">
+      <li><a href="suggestions">Artists You May Like</a></li>
+    </ul>
+  </div>
+</%def>
+
+<%def name="body()">
+  <form action="markArtists" method="get">
+    <div class="table_wrapper table_sorting">
+      <p class="right">
+        <select name="action">
+          <option value="pause">Pause</option>
+          <option value="resume">Resume</option>
+          <option value="refresh">Refresh</option>
+          <option value="delete">Delete</option>
+        </select>
+        selected artists
+        <input type="submit" value="Go">
+      </p>
+
+      <table class="display" id="artist_table">
+        <thead>
+          <tr>
+            <th id="select">
+              <input type="checkbox" onClick="toggle(this)" />
+            </th>
+            <th id="name">Artist Name</th>
+            <th id="album">Latest Album</th>
+            <th style="min-width:120px;">Release Date</th>
+            <th id="have">Tracks</th>
+            <th id="status">Status</th>
+          </tr>
+        </thead>
+
+        <tbody>
+        %for artist in artists:
+          <%
+            if artist['artist_state'] == 'paused':
+              row_grade = 'X'
+            else:
+              row_grade = 'Z'
+          %>
+          <tr class="grade${row_grade}">
+            <td id="select">
+              <input type="checkbox" name="${artist['artist_id']}" class="checkbox" />
+            </td>
+
+            <td id="name">
+              <span title="${artist['artist_unique_name']}"></span>
+              <a href="artist?artist_id=${artist['artist_id']}">${artist['artist_name']}</a>
+            </td>
+
+            <td id="album">
+              <%
+                latest_album = db.DBConnection().action('SELECT album_id, album_name, MAX(album_released_on) AS album_released_on FROM albums WHERE artist_id = ?', [artist['artist_id']]).fetchone()
+              %>
+              % if latest_album['album_name']:
+                <a title="${latest_album['album_name']}" href="album?album_id=${latest_album['album_id']}">${latest_album['album_name']}</a>
+              % endif
+            </td>
+
+            <td>
+              % if latest_album['album_released_on']:
+                <p class="center">${latest_album['album_released_on']}</p>
+              % endif
+            </td>
+
+            <%
+              total_tracks = db.DBConnection().action('SELECT COUNT(*) AS count FROM tracks WHERE album_id IN (SELECT album_id FROM albums WHERE artist_id=?)', [artist['artist_id']]).fetchone()
+              total_tracks = total_tracks['count']
+            %>
+
+            <%
+              obtained_tracks = db.DBConnection().action('SELECT COUNT(*) AS count FROM tracks WHERE album_id IN (SELECT album_id FROM albums WHERE artist_id=?) AND track_location IS NOT NULL', [artist['artist_id']]).fetchone()
+              obtained_tracks = obtained_tracks['count']
+            %>
+
+            <%
+              try:
+                percent = (obtained_tracks * 100.0) / total_tracks
+
+                if percent > 100: percent = 100
+              except (ZeroDivisionError, TypeError):
+                percent = 0
+            %>
+
+            <td id="have">
+              <span title="${percent}"></span>
+              <div class="progress-container">
+                <div style="width: ${percent}%;">
+                  <div class="havetracks">${obtained_tracks}/${total_tracks}</div>
+                </div>
+              </div>
+            </td>
+
+            <td id="status">
+              ${artist['artist_state']}
+            </td>
+          </tr>
+        %endfor
+        </tbody>
+      </table>
+    </div>
+  </form>
+</%def>
+
+<%def name="headIncludes()">
+  <link rel="stylesheet" href="css/data_table.css">
+</%def>
+
+<%def name="javascriptIncludes()">
+  <script src="js/libs/jquery.dataTables.min.js"></script>
+  <script>
+    $(document).ready( function() {
+      $('#artist_table').dataTable( {
+          "aoColumns": [
+            { "bSortable": false },
+            { "sType": "title-string"},
+            null,
+            { "sType": "title-string"},
+            { "sType": "date"},
+            { "sType": "title-numeric"}
+          ],
+          "bStateSave": true,
+          "iDisplayLength": 50,
+          "sPaginationType": "full_numbers"
+        } );
+    } );
+  </script>
+</%def>

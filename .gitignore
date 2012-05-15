@@ -1,0 +1,11 @@
+*.pyc
+*.log
+*.db
+*.sqlite
+*.sqlite3
+*.ini
+logs/*
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
