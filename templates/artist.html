@@ -1,29 +1,27 @@
 <%inherit file="base.html"/>
-<%!
-  from headphones import models
-%>
 
 <%def name="headerIncludes()">
   <div id="subhead_container">
     <ul id="subhead_menu">
-      <li><a href="refreshArtist?id=${artist['artist_id']}">Refresh Artist</a></li>
-      <li><a href="deleteArtist?id=${artist['artist_id']}">Delete Artist</a></li>
-      %if artist['artist_state'] == 'paused':
-        <li><a href="resumeArtist?id=${artist['artist_id']}">Resume Artist</a></li>
+      <li><a href="refreshArtist?id=${artist.id}">Refresh Artist</a></li>
+      <li><a href="deleteArtist?id=${artist.id}">Delete Artist</a></li>
+      %if artist.state == 'paused':
+        <li><a href="resumeArtist?id=${artist.id}">Resume Artist</a></li>
       %else:
-        <li><a href="pauseArtist?id=${artist['artist_id']}">Pause Artist</a></li>
+        <li><a href="pauseArtist?id=${artist.id}">Pause Artist</a></li>
       %endif
     </ul>
   </div>
 </%def>
 
 <%def name="body()">
-  <form action="markAlbums" method="get"><input type="hidden" name="ArtistID" value=${artist['artist_id']}>
+  <form action="markAlbums" method="get">
+    <input type="hidden" name="ArtistID" value=${artist.id}>
     <div class="table_wrapper table_sorting">
-      <img class="left" height="50" src="artist['artist_small_image_url']" alt="${artist['artist_name']}" />
-      <h1 class="left">${artist['artist_name']}</h1>
+      <img class="left" height="50" src="artist['artist_small_image_url']" alt="${artist.name}" />
+      <h1 class="left">${artist.name}</h1>
 
-      %if artist['artist_state'] == 'loading':
+      %if artist.state == 'loading':
         <p> (Album information for this artist is currently being loaded)</p>
       %endif
 
@@ -51,73 +49,73 @@
         </thead>
 
         <tbody>
-        %for album in albums:
+        %for album in artist.albums():
           <%
-            if album['album_state'] == 'skipped':
+            if album.state == 'skipped':
               grade = 'Z'
-            elif album['album_state'] == 'wanted':
+            elif album.state == 'wanted':
               grade = 'X'
-            elif album['album_state'] == 'snatched':
+            elif album.state == 'snatched':
               grade = 'C'
             else:
               grade = 'A'
           %>
 
           <%
-            total_tracks = db.DBConnection().action('SELECT COUNT(*) as count FROM tracks WHERE album_id=?', [album['album_id']]).fetchone()
-            total_tracks = total_tracks['count']
+            # total_tracks = db.DBConnection().action('SELECT COUNT(*) as count FROM tracks WHERE album_id=?', [album['album_id']]).fetchone()
+            # total_tracks = total_tracks['count']
           %>
 
           <%
-            obtained_tracks = db.DBConnection().action('SELECT COUNT(*) AS count FROM tracks WHERE album_id=? AND track_location IS NOT NULL', [album['album_id']]).fetchone()
-            obtained_tracks = obtained_tracks['count']
+            # obtained_tracks = db.DBConnection().action('SELECT COUNT(*) AS count FROM tracks WHERE album_id=? AND track_location IS NOT NULL', [album['album_id']]).fetchone()
+            # obtained_tracks = obtained_tracks['count']
           %>
 
           <%
-            try:
-              percent = (obtained_tracks * 100.0) / total_tracks
-
-              if percent > 100: percent = 100
-            except (ZeroDivisionError, TypeError):
-              percent = 0
+            # try:
+            #   percent = (obtained_tracks * 100.0) / total_tracks
+            # 
+            #   if percent > 100: percent = 100
+            # except (ZeroDivisionError, TypeError):
+            #   percent = 0
           %>
           <tr class="grade${grade}">
             <td id="select">
-              <input type="checkbox" name="${album['album_id']}" class="checkbox" />
+              <input type="checkbox" name="${album.id}" class="checkbox" />
             </td>
 
             <td id="albumart">
-              <img src="album['album_image_url']" height="50" width="50">
+              <img src="album.image_url" height="50" width="50">
             </td>
 
             <td id="albumname">
-              <a href="album?id=${album['album_id']}">${album['album_name']}</a>
+              <a href="album?id=${album.id}">${album.name}</a>
             </td>
 
             <td id="reldate">
-              ${album['album_released_on']}
+              ${album.released_on}
             </td>
 
             <td id="type">
-              ${album['album_type']}
+              ${album.type}
             </td>
 
             <td id="status">
-              ${album['album_state']}
-            %if album['album_state'] == 'skipped':
-              [<a href="queueAlbum?album_id=${album['album_id']}&album_id=${album['artist_id']}">want</a>]
-            %elif album['album_state'] == 'wanted':
-              [<a href="unqueueAlbum?album_id=${album['album_id']}&album_id=${album['artist_id']}">skip</a>]
+              ${album.state}
+            %if album.state == 'skipped':
+              [<a href="queueAlbum?id=${album.id}">want</a>]
+            %elif album.state == 'wanted':
+              [<a href="unqueueAlbum?id=${album.id}">skip</a>]
             %else:
-              [<a href="queueAlbum?album_id=${album['album_id']}&album_id=${album['artist_id']}" title="Retry the same download again">retry</a>][<a href="queueAlbum?album_id=${album['album_id']}&artist_id=${album['artist_id']}&new=True" title="Try a new download, skipping all previously tried nzbs">new</a>]
+              [<a href="queueAlbum?id=${album.id}" title="Retry the same download again.">retry</a>][<a href="queueAlbum?album_id=${album.id}&new=True" title="Try a new download, skipping all previously tried nzbs">new</a>]
             %endif
             </td>
 
             <td id="have">
-              <span title="${percent}"><span>
+              <span title="percent}"><span>
               <div class="progress-container">
-                <div style="width:${percent}%">
-                  <div class="havetracks">${obtained_tracks}/${total_tracks}</div>
+                <div style="width:0%">
+                  <div class="havetracks"></div>
                 </div>
               </div>
             </td>
@@ -130,11 +128,11 @@
 </%def>
 
 <%def name="headIncludes()">
-  <link rel="stylesheet" href="css/data_table.css">
+  <link rel="stylesheet" href="/css/data_table.css">
 </%def>
 
 <%def name="javascriptIncludes()">
-  <script src="js/libs/jquery.dataTables.min.js"></script>
+  <script src="js/lib/jquery.dataTables.min.js"></script>
   <script>
     $(document).ready(function()
     {

@@ -4,8 +4,10 @@ import os
 from logging import handlers
 
 
-logger = logging.getLogger('headphones')
+# Logging setup.
 log_file = os.path.join(os.path.dirname(__file__), '..', '..', 'log/' 'headphones.log')
+
+logger = logging.getLogger('headphones')
 formatter = logging.Formatter('%(asctime)s (%(threadName)s) %(levelname)s :: %(message)s', '%d-%m-%Y %H:%M:%S')
 consolehandler = logging.StreamHandler()
 filehandler = handlers.RotatingFileHandler(log_file, maxBytes=1000000, backupCount=3)

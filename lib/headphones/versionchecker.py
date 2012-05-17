@@ -1,6 +1,6 @@
 import models
 
-from lib.headphones.logger import logger
+from logger import logger
 
 
 class Versioned(object):

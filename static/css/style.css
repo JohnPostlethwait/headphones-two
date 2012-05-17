@@ -1,9 +1,9 @@
 a:link {
-  color: #a3e532;
+  color: #94DB1A;
   text-decoration: none;
 }
 a:visited {
-  color: #a3e532;
+  color: #94DB1A;
   text-decoration: none;
 }
 a:hover { /*this effect is not shown in NN4.xx*/
@@ -122,7 +122,8 @@ header ul#nav li a {
   padding: 5px;
   font-size: 16px;
   font-weight: bold;
-  color: #a3e532;
+  color: #94DB1A;
+  letter-spacing: 0.15em;
   text-decoration: none;
   text-transform: uppercase;
 }
@@ -130,7 +131,7 @@ header ul#nav li a img {
   vertical-align: middle;
 }
 header ul#nav li a:hover {
-  color: #fff;
+  color: #D0EBA2;
 }
 
 div#subhead_container {
@@ -267,7 +268,7 @@ table#searchresults_table td#artistname { vertical-align: middle; text-align: le
 table#searchresults_table td#score { vertical-align: middle; text-align: center; min-width: 75px; }
 
 div.progress-container { border: 1px solid #ccc; width: 100px; height: 14px; margin: 2px 5px 2px 0; padding: 1px; float: left; background: white; }
-div.progress-container > div { background-color: #a3e532; height: 14px; }
+div.progress-container > div { background-color: #94DB1A; height: 14px; }
 .havetracks { font-size: 13px; margin-left: 36px; padding-bottom: 3px; vertical-align: middle; }
 
 footer { margin: 20px auto 20px auto; color: #aaa; }

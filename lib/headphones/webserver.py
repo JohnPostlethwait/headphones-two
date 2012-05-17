@@ -17,7 +17,7 @@ def start(options={}):
 
   config = {
     '/': {
-      'tools.staticdir.root': os.path.join(os.path.abspath(__file__), '..', '..', 'static')
+      'tools.staticdir.root': os.path.join(os.path.dirname(__file__), '..', '..', 'static')
     },
     '/images':{
       'tools.staticdir.on': True,

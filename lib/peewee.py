@@ -2344,7 +2344,7 @@ class ForeignKeyField(IntegerField):
 
 
 # define a default database object in the module scope
-database = SqliteDatabase(DATABASE_NAME)
+database = SqliteDatabase(DATABASE_NAME, threadlocals=True)
 
 
 class BaseModelOptions(object):
