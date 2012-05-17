@@ -1,6 +1,7 @@
 *.pyc
 *.log
 *.db
+.db-journal
 *.sqlite
 *.sqlite3
 *.ini

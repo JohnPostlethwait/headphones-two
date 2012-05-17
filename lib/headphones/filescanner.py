@@ -98,29 +98,22 @@ def addArtist(id3_artist_name, path):
 
   if musicbrainz_artist is None:
     unique_name = id3_artist_name
-    sort_name = id3_artist_name
     artist_mb_id = None
   else:
     unique_name = musicbrainz_artist.getUniqueName()
-    sort_name = musicbrainz_artist.getSortName()
     artist_mb_id = utils.extractUuid(musicbrainz_artist.id)
 
   try:
-    existing_artist = Artist.get(musicbrainz_id=artist_mb_id)
+    artist = Artist.get(peewee.Q(musicbrainz_id=artist_mb_id) | peewee.Q(unique_name=unique_name))
   except peewee.DoesNotExist:
-    existing_artist = None
-
-  if existing_artist:
-    return existing_artist
-  else:
-    artist_record = Artist.create(
+    artist = Artist.create(
         name = id3_artist_name,
         unique_name = unique_name,
         location = path,
         state = 'wanted',
         musicbrainz_id = artist_mb_id)
 
-    return artist_record
+  return artist
 
 
 def addReleases( artist_id, update_artist = True ):
