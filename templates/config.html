@@ -1,7 +1,6 @@
 <%inherit file="base.html"/>
 <%!
-  import headphones
-  from headphones.helpers import checked
+  from lib.headphones.helpers import checked
 %>
 
 <%def name="headerIncludes()">
@@ -25,20 +24,20 @@
       scan for audio files in that folder (including all subdirectories.)
       <br />
       <small>For example: '/Users/name/Music'</small>
-      <br />
-      It may take a while depending on how many files you have. You can 
-      navigate away from the page as soon as you click 'Submit'.
     </p>
 
     <form action="musicScan" method="get">
       <label for="path">Your Music Directory</label>
-      %if headphones.MUSIC_DIR:
-        <input type="text" value="${headphones.MUSIC_DIR}" id="path" name="path" size="50" />
+      %if config.music.directory:
+        <input type="text" value="${config.music.directory}" id="path" name="path" size="50" />
       %else:
         <input type="text" id="path" name="path" size="50" />
       %endif
       <br />
-      <br />
+      <p>
+        It may take a while depending on how many files you have. You can 
+        navigate away from the page as soon as you click &ldquo;Start Scanning&rdquo;.
+      </p>
       <input type="submit" value="Start Scanning" />
     </form>
   </div>
@@ -50,8 +49,8 @@
 
     <form action="importLastFM" method="get">
       <label for="username">Last.FM Username</label>
-      %if headphones.LASTFM_USERNAME:
-      <input type="text" id="username" value="${headphones.LASTFM_USERNAME}" name="username" />
+      %if config.lastfm.username:
+      <input type="text" id="username" value="${config.lastfm.username}" name="username" />
       %else:
       <input type="text" id="username" name="username" />
       %endif
@@ -65,20 +64,22 @@
     <div class="table_wrapper">
       <h1><img src="images/web.png"> Web Interface</h1>
 
+      <p>All changes require a restart to take effect.</p>
+
       <label for="http_host">HTTP Host</label>
-      <input type="text" name="http_host" id="http_host" value="${config['http_host']}" maxlength="40" />
+      <input type="text" name="http_host" id="http_host" value="${config.webserver.http_host}" maxlength="40" />
       <small>i.e. localhost or 0.0.0.0</small>
       <br />
       <label for="http_port">HTTP Port</label>
-      <input type="text" name="http_port" id="http_port" value="${config['http_port']}" maxlength="40" />
+      <input type="text" name="http_port" id="http_port" value="${config.webserver.http_port}" maxlength="40" />
       <br />
       <label for="http_username">HTTP Username</label>
-      <input type="text" name="http_username" id="http_username" value="${config['http_user']}" maxlength="40" />
+      <input type="text" name="http_username" id="http_username" value="${config.webserver.http_username}" maxlength="40" />
       <br />
       <label for="http_password">HTTP Password</label>
-      <input type="password" name="http_password" id="http_password" value="${config['http_pass']}" maxlength="40" />
+      <input type="password" name="http_password" id="http_password" value="${config.webserver.http_password}" maxlength="40" />
       <br />
-      <input type="checkbox" name="launch_browser" id="launch_browser" value="1" ${config['launch_browser']} />
+      <input type="checkbox" name="launch_browser" id="launch_browser" value="1" ${config.webserver.launch_browser} />
       <label for="launch_browser">Launch Browser on Startup</label>
     </div>
 
@@ -88,11 +89,11 @@
       <fieldset>
         <legend>Music</legend>
 
-        <input type="checkbox" id="include_extras" name="include_extras" value="1" ${config['include_extras']} />
-        <label for="include_extras">Download All Albums</label>
-        <small>When adding an artist: EPs, Compilations, Live Albums, Remix Albums, and Singles</small>
+        <input type="checkbox" id="include_extras" name="include_extras" value="1" ${config.downloading.extras} />
+        <label for="include_extras">Download All Releases</label>
+        <small>When adding an artist, download all EPs, Compilations, Live Albums, Remix Albums, and Singles.</small>
         <br />
-        <input type="checkbox" name="add_album_art" id="add_album_art" value="1" ${config['add_album_art']} />
+        <input type="checkbox" name="add_album_art" id="add_album_art" value="1" ${config.downloading.artwork} />
         <label for="add_album_art">Download Album Art</label>
       </fieldset>
 
@@ -100,43 +101,43 @@
         <legend>Usenet</legend>
 
         <label for="usenet_retention">Usenet Retention</label>
-        <input type="text" id="usenet_retention" name="usenet_retention" value="${config['usenet_retention']}" maxlength="40">
+        <input type="text" id="usenet_retention" name="usenet_retention" value="${config.usenet.retention}" maxlength="40">
       </fieldset>
 
       <fieldset>
         <legend>SABnzbd</legend>
 
         <label for="sab_host">SABnzbd Host</label>
-        <input type="text" id="sab_host" name="sab_host" value="${config['sab_host']}" maxlength="40" />
+        <input type="text" id="sab_host" name="sab_host" value="${config.sabnzbd.host}" maxlength="40" />
         <small>usually http://localhost:8080</small>
         <br />
         <label for="sab_username">SABnzbd Username</label>
-        <input type="text" id="sab_username" name="sab_username" value="${config['sab_user']}" maxlength="40" />
+        <input type="text" id="sab_username" name="sab_username" value="${config.sabnzbd.username}" maxlength="40" />
         <br />
         <label for="sab_password">SABnzbd Password</label>
-        <input type="password" id="sab_password" name="sab_password" value="${config['sab_pass']}" maxlength="40" />
+        <input type="password" id="sab_password" name="sab_password" value="${config.sabnzbd.password}" maxlength="40" />
         <br />
         <label for="sab_apikey">SABnzbd API Key</label>
-        <input type="text" id="sab_apikey" name="sab_apikey" value="${config['sab_api']}" maxlength="40" />
+        <input type="text" id="sab_apikey" name="sab_apikey" value="${config.sabnzbd.api_key}" maxlength="40" />
         <br />
         <label for="sab_category">SABnzbd Category</label>
-        <input type="text" id="sab_category" name="sab_category" value="${config['sab_cat']}" maxlength="40" />
+        <input type="text" id="sab_category" name="sab_category" value="${config.sabnzbd.category}" maxlength="40" />
         <small>probably &ldquo;Music&rdquo;</small>
         <br />
         <label for="download_dir">Music Download Directory</label>
-        <input type="text" id="download_dir" name="download_dir" value="${config['download_dir']}">
+        <input type="text" id="download_dir" name="download_dir" value="${config.sabnzbd.download_directory}">
         <small>Full path to the directory where SAB downloads your music.</small>
       </fieldset>
 
       <fieldset>
         <legend>Black Hole</legend>
 
-        <input type="checkbox" id="blackhole" name="blackhole" value="1" ${config['use_blackhole']} />
+        <input type="checkbox" id="blackhole" name="blackhole" value="1" ${config.blackhole.enabled} />
         <label for="blackhole">Use Black Hole</label>
         <br />
         <label for="blackhole_dir">Black Hole Directory</label>
-        <input type="text" id="blackhole_dir" name="blackhole_dir" value="${config['blackhole_dir']}" />
-        <small>Folder your Download program watches for NZBs</small>
+        <input type="text" id="blackhole_dir" name="blackhole_dir" value="${config.blackhole.directory}" />
+        <small>Folder SABnzbd watches for NZBs</small>
       </fieldset>
     </div>
 
@@ -146,246 +147,54 @@
       <fieldset>
         <legend>NZBMatrix</legend>
 
-        <input type="checkbox" id="nzbmatrix" name="nzbmatrix" value="1" ${config['use_nzbmatrix']} />
+        <input type="checkbox" id="nzbmatrix" name="nzbmatrix" value="1" ${config.nzbmatrix.enabled} />
         <label for="nzbmatrix">Use NZBMatrix</label>
         <br />
         <label for="nzbmatrix_username">NZBMatrix Username</label>
-        <input type="text" id="nzbmatrix_username" name="nzbmatrix_username" value="${config['nzbmatrix_user']}" maxlength="40" />
+        <input type="text" id="nzbmatrix_username" name="nzbmatrix_username" value="${config.nzbmatrix.username}" maxlength="40" />
         <br />
         <label for="nzbmatrix_apikey">NZBMatrix API</label>
-        <input type="text" id="nzbmatrix_apikey" name="nzbmatrix_apikey" value="${config['nzbmatrix_api']}" maxlength="40" />
+        <input type="text" id="nzbmatrix_apikey" name="nzbmatrix_apikey" value="${config.nzbmatrix.api_key}" maxlength="40" />
       </fieldset>
 
       <fieldset>
         <legend>Newznab</legend>
 
-        <input type="checkbox" name="newznab" id="newznab" value="1" ${config['use_newznab']} />
+        <input type="checkbox" name="newznab" id="newznab" value="1" ${config.newznab.enabled} />
         <label for="newznab">Use Newznab</label>
         <br />
         <label for="newznab_host">Newznab Host</label>
-        <input type="text" id="newznab_host" name="newznab_host" value="${config['newznab_host']}" maxlength="40" />
+        <input type="text" id="newznab_host" name="newznab_host" value="${config.newznab.host}" maxlength="40" />
         <small>i.e. http://nzb.su</small>
         <br />
         <label for="newznab_apikey">Newznab API</label>
-        <input type="text" id="newznab_apikey" name="newznab_apikey" value="${config['newznab_api']}" maxlength="40" />
+        <input type="text" id="newznab_apikey" name="newznab_apikey" value="${config.newznab.api_key}" maxlength="40" />
       </fieldset>
 
       <fieldset>
         <legend>NZBs.org</legend>
 
-        <input type="checkbox" id="nzbsorg" name="nzbsorg" value="1" ${config['use_nzbsorg']} />
+        <input type="checkbox" id="nzbsorg" name="nzbsorg" value="1" ${config.nzbsorg.enabled} />
         <label for="nzbsorg">Use NZBs.org</label>
         <br />
         <label for="nzbsorg_uid">NZBs.org UID</label>
-        <input type="text" id="nzbsorg_uid" name="nzbsorg_uid" value="${config['nzbsorg_uid']}" maxlength="40" />
+        <input type="text" id="nzbsorg_uid" name="nzbsorg_uid" value="${config.nzbsorg.uid}" maxlength="40" />
         <br />
         <label for="nzbsorg_hash">NZBs.org Hash</label>
-        <input type="text" id="nzbsorg_hash" name="nzbsorg_hash" value="${config['nzbsorg_hash']}" maxlength="40" />
+        <input type="text" id="nzbsorg_hash" name="nzbsorg_hash" value="${config.nzbsorg.hash}" maxlength="40" />
       </fieldset>
 
       <fieldset>
         <legend>Newzbin</legend>
 
-        <input type="checkbox" id="newzbin" name="newzbin" value="1" ${config['use_newzbin']} />
+        <input type="checkbox" id="newzbin" name="newzbin" value="1" ${config.newzbin.enabled} />
         <label for="newzbin">Use Newzbin</label>
         <br />
         <label for="newzbin_uid">Newzbin UID</label>
-        <input type="text" id="newzbin_uid" name="newzbin_uid" value="${config['newzbin_uid']}" maxlength="40" />
+        <input type="text" id="newzbin_uid" name="newzbin_uid" value="${config.newzbin.uid}" maxlength="40" />
         <br />
         <label for="newzbin_password">Newzbin Password</label>
-        <input type="text" id="newzbin_password" name="newzbin_password" value="${config['newzbin_pass']}" maxlength="40" />
-      </fieldset>
-    </div>
-
-    <div class="table_wrapper">
-      <h1><img src="images/quality.png"> Quality &amp; Post Processing</h1>
-
-      <fieldset>
-        <legend>Album Quality</legend>
-
-        <input type="radio" id="excluding" name="preferred_quality" value="0" ${config['pref_qual_0']} />
-        <label for="excluding">Highest Quality excluding Lossless</label>
-        <br />
-        <input type="radio" id="including" name="preferred_quality" value="1" ${config['pref_qual_1']} />
-        <label for="including">Highest quality including lossless</label>
-        <br />
-        <input type="radio" id="lossless" name="preferred_quality" value="3" ${config['pref_qual_3']} />
-        <label for="lossless">Lossless Only</label>
-        <br />
-        <input type="radio" id="user_choose" name="preferred_quality" value="2" ${config['pref_qual_2']} />
-        <label for="user_choose">Preferred Bitrate</label>
-        <br />
-        <input type="text" name="preferred_bitrate" value="${config['pref_bitrate']}" size="3" maxlength="5" /><small>kbps</small>
-        <br />
-        <input type="checkbox" id="detect" name="detect_bitrate" value="1" ${config['detect_bitrate']} />
-        <label for="detect">Auto-Detect Preferred Bitrate</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Post-Processing</legend>
-
-        <label for="destination_dir">Path to Destination Folder</label>
-        <input type="text" id="destination_dir" name="destination_dir" value="${config['dest_dir']}" />
-        <small>i.e. /Users/name/Music/iTunes or /Volumes/share/music</small>
-        <br />
-        <input type="checkbox" name="move_files" id="move_files" value="1" ${config['move_files']} />
-        <label for="move_files">Move Downloads</label>
-        <small>To the destination folder above.</small>
-        <br />
-        <input type="checkbox" name="rename_files" id="rename_files" value="1" ${config['rename_files']} />
-        <label for="rename_files">Rename Files</label>
-        <br />
-        <input type="checkbox" name="correct_metadata" id="correct_metadata" value="1" ${config['correct_metadata']} />
-        <label for="correct_metadata">Correct Metadata</label>
-        <br />
-        <input type="checkbox" name="cleanup_files" id="cleanup_files" value="1" ${config['cleanup_files']} />
-        <label for="cleanup_files">Delete Leftover Files</label>
-        <small>EG: (.m3u, .nfo, .sfv, .nzb, etc.)</small>
-        <br />
-        <input type="checkbox" name="embed_album_art" id="embed_album_art" value="1" ${config['embed_album_art']} />
-        <label for="embed_album_art">Embed Album Art in Files</label>
-        <br />
-        <input type="checkbox" name="embed_lyrics" id="embed_lyrics" value="1" ${config['embed_lyrics']} />
-        <label for="embed_lyrics">Embed Lyrics</label>
-      </fieldset>
-
-      <fieldset>
-        <legend>Post-Download Encoding</legend>
-        <p>This option requires the lame or ffmpeg encoder.</p>
-
-        <input type="checkbox" name="encode" id="encode" value="1" ${config['encode']}/>
-        <label for="encode">Re-encode</label>
-        <small>Re-encode all downloads during post-processing.</small>
-        <br />
-
-        <div id="encoderoptions">
-          <hr />
-          <input type="checkbox" id="encoderlossless" name="encoderlossless" value="1" ${config['encoderlossless']} />
-          <label for="encoderlossless">Only Lossless?</label>
-          <small>Run encoding on lossless files (.flac) only.</small>
-          <br />
-          <br />
-          <%
-            if config['encoder'] == 'lame':
-              lameselect = 'selected="selected"'
-              ffmpegselect = ''
-            else:
-              lameselect = ''
-              ffmpegselect = 'selected="selected"'
-          %>
-          <label for="encoder">Encoder</label>
-          <br />
-          <select id="encoder" name="encoder">
-            <option value="lame" ${lameselect}>lame</option>
-            <option value="ffmpeg" ${ffmpegselect}>ffmpeg</option>
-          </select>
-          <br />
-          <label for="encoder">Format</label>
-          <br />
-          <select name="encoderoutputformat">
-          %for x in ['mp3', 'ogg', 'm4a']:
-            <%
-              if config['encoderoutputformat'] == x:
-                outputselect = 'selected'
-              else:
-                outputselect = ''
-            %>
-            <option value=${x} ${outputselect}>${x}</option>
-          %endfor
-          </select>
-
-          <hr />
-
-          <h3>Audio Encoding Properties</h3>
-
-          <label for="encodervbrcbr">VBR or CBR</label>
-          <select id="encodervbrcbr" name="encodervbrcbr">
-            %for x in ['CBR', 'VBR']:
-              <%
-                if config['encodervbrcbr'] == x:
-                  outputselect = 'selected'
-                else:
-                  outputselect = ''
-              %>
-              <option value=${x} ${outputselect}>${x}</option>
-            %endfor
-          </select>
-          <br />
-          <label for="encoderquality">Quality</label>
-          <select name="encoderquality">
-            %for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-              <%
-                if config['encoderquality'] == x:
-                  outputselect = 'selected'
-                else:
-                  outputselect = ''
-              %>
-              <option value=${x} ${outputselect}>${x}</option>
-            %endfor
-          </select>
-          <br />
-          <label for="bitrate">Bitrate</label>
-          <select name="bitrate">
-            %for x in [64, 128, 192, 256, 320]:
-              <%
-                if config["bitrate"] == x:
-                  bitrateselected = "selected"
-                else:
-                  bitrateselected = ''
-              %>
-              <option value=${x} ${bitrateselected}> ${x} kbps</option>
-            %endfor
-          </select>
-          <br />
-          <%
-            if config["samplingfrequency"] == 44100:
-              freq44100 = 'selected="selected"'
-              freq48000 = ''
-            else:
-              freq44100 = ''
-              freq48000 = 'selected="selected"'
-          %>
-          <label for="samplingfrequency">Sampling</label>
-          <select name="samplingfrequency">
-            <option value=44100 ${freq44100}>44.1 kHz</option>
-            <option value=48000 ${freq48000}>48.0 kHz</option>
-          </select>
-          <br />
-          <label for="advancedencoder">Advanced Encoder Options</label>
-          <input type="text" id="advancedencoder" name="advancedencoder" value="${config['advancedencoder']}" />
-          <small>If used, all above settings will be ignored.</small>
-          <br />
-          <label for="encoderfolder">Path to Encoder</label>
-          <input type="text" id="encoderfolder" name="encoderfolder" value="${config['encoderfolder']}" />
-        </div>
-      </fieldset>
-    </div>
-
-    <div class="table_wrapper">
-      <h1><img src="images/advanced.png"> Advanced Settings</h1>
-
-      <fieldset>
-        <legend>Renaming Options</legend>
-
-        <label for="folder_format">Folder Format</label>
-        <input type="text" name="folder_format" id="folder_format" value="${config['folder_format']}" />
-        <br />
-        <small>
-          Use: artist, album, year and first (first letter in artist name)
-          <br />
-          EG: first/artist/album [year] = G/Girl Talk/All Day [2010]
-        </small>
-        <br />
-        <label for="file_format">File Format</label>
-        <input type="text" id="file_format" name="file_format" value="${config['file_format']}" />
-        <small>Use: tracknumber, title, artist, album and year</small>
-      </fieldset>
-
-      <fieldset>
-        <legend>Miscellaneous</legend>
-
-        <label for="log_dir">Log Directory</label>
-        <input type="text" id="log_dir" name="log_dir" value="${config['log_dir']}" size="55" />
+        <input type="text" id="newzbin_password" name="newzbin_password" value="${config.newzbin.password}" maxlength="40" />
       </fieldset>
     </div>
 
@@ -400,24 +209,17 @@
 
 <%def name="javascriptIncludes()">
   <script>
-  $(document).ready(function()
-  {
-    if ($("#encode").is(":checked"))
-      {
-        $("#encoderoptions").show();
-      }
-    else
-      {
-        $("#encoderoptions").hide();
-      }
-    
-    $("#encode").click(function(){
-      if ($("#encode").is(":checked"))
-      {
+  $(document).ready(function() {
+    if ($("#encode").is(":checked")) {
+      $("#encoderoptions").show();
+    } else {
+      $("#encoderoptions").hide();
+    }
+
+    $("#encode").click(function() {
+      if ($("#encode").is(":checked")) {
         $("#encoderoptions").show("fast");
-      }
-      else
-      {
+      } else {
         $("#encoderoptions").hide("fast");
       }
     });

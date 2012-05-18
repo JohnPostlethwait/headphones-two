@@ -1,6 +1,18 @@
 import time
 
 
+def checked(variable):
+  if variable:
+    return 'Checked'
+  else:
+    return ''
+
+def radio(variable, pos):
+  if variable == pos:
+    return 'Checked'
+  else:
+    return ''
+
 def convert_milliseconds(ms):
   if ms:
     seconds = ms / 1000

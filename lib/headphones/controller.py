@@ -9,6 +9,8 @@ from models import Album
 from models import Artist
 from models import Track
 
+from lib.headphones import *
+
 # from headphones import searcher
 # from headphones import librarysync
 # from headphones import importer
@@ -341,70 +343,11 @@ class Controller(object):
   #     self.database.action('DELETE FROM snatched WHERE Status=?', [type])
   # 
   #   raise cherrypy.HTTPRedirect("history")
-  # 
-  # 
-  # @cherrypy.expose
-  # def config(self):
-  #   config = { 
-  #         "http_host" : headphones.HTTP_HOST,
-  #         "http_user" : headphones.HTTP_USERNAME,
-  #         "http_port" : headphones.HTTP_PORT,
-  #         "http_pass" : headphones.HTTP_PASSWORD,
-  #         "launch_browser" : checked(headphones.LAUNCH_BROWSER),
-  #         "sab_host" : headphones.SAB_HOST,
-  #         "sab_user" : headphones.SAB_USERNAME,
-  #         "sab_api" : headphones.SAB_APIKEY,
-  #         "sab_pass" : headphones.SAB_PASSWORD,
-  #         "sab_cat" : headphones.SAB_CATEGORY,
-  #         "download_dir" : headphones.DOWNLOAD_DIR,
-  #         "use_blackhole" : checked(headphones.BLACKHOLE),
-  #         "blackhole_dir" : headphones.BLACKHOLE_DIR,
-  #         "usenet_retention" : headphones.USENET_RETENTION,
-  #         "use_nzbmatrix" : checked(headphones.NZBMATRIX),
-  #         "nzbmatrix_user" : headphones.NZBMATRIX_USERNAME,
-  #         "nzbmatrix_api" : headphones.NZBMATRIX_APIKEY,
-  #         "use_newznab" : checked(headphones.NEWZNAB),
-  #         "newznab_host" : headphones.NEWZNAB_HOST,
-  #         "newznab_api" : headphones.NEWZNAB_APIKEY,
-  #         "use_nzbsorg" : checked(headphones.NZBSORG),
-  #         "nzbsorg_uid" : headphones.NZBSORG_UID,
-  #         "nzbsorg_hash" : headphones.NZBSORG_HASH,
-  #         "use_newzbin" : checked(headphones.NEWZBIN),
-  #         "newzbin_uid" : headphones.NEWZBIN_UID,
-  #         "newzbin_pass" : headphones.NEWZBIN_PASSWORD,
-  #         "pref_qual_0" : radio(headphones.PREFERRED_QUALITY, 0),
-  #         "pref_qual_1" : radio(headphones.PREFERRED_QUALITY, 1),
-  #         "pref_qual_3" : radio(headphones.PREFERRED_QUALITY, 3),
-  #         "pref_qual_2" : radio(headphones.PREFERRED_QUALITY, 2),
-  #         "pref_bitrate" : headphones.PREFERRED_BITRATE,
-  #         "detect_bitrate" : checked(headphones.DETECT_BITRATE),
-  #         "move_files" : checked(headphones.MOVE_FILES),
-  #         "rename_files" : checked(headphones.RENAME_FILES),
-  #         "correct_metadata" : checked(headphones.CORRECT_METADATA),
-  #         "cleanup_files" : checked(headphones.CLEANUP_FILES),
-  #         "add_album_art" : checked(headphones.ADD_ALBUM_ART),
-  #         "embed_album_art" : checked(headphones.EMBED_ALBUM_ART),
-  #         "embed_lyrics" : checked(headphones.EMBED_LYRICS),
-  #         "dest_dir" : headphones.DESTINATION_DIR,
-  #         "folder_format" : headphones.FOLDER_FORMAT,
-  #         "file_format" : headphones.FILE_FORMAT,
-  #         "include_extras" : checked(headphones.INCLUDE_EXTRAS),
-  #         "log_dir" : headphones.LOG_DIR,
-  #         "encode":   checked(headphones.ENCODE),
-  #         "encoder":    headphones.ENCODER,
-  #         "bitrate":    int(headphones.BITRATE),
-  #         "encoderfolder":  headphones.ENCODERFOLDER,
-  #         "advancedencoder":  headphones.ADVANCEDENCODER,
-  #         "encoderoutputformat": headphones.ENCODEROUTPUTFORMAT,
-  #         "samplingfrequency": headphones.SAMPLINGFREQUENCY,
-  #         "encodervbrcbr": headphones.ENCODERVBRCBR,
-  #         "encoderquality": headphones.ENCODERQUALITY,
-  #         "encoderlossless": checked(headphones.ENCODERLOSSLESS)
-  #       }
-  # 
-  #   return self.serve_template("config.html", title="Settings", config=config)
-  # 
-  # 
+
+  @cherrypy.expose
+  def config(self):
+    return self.serve_template("config.html", title="Settings", config=config)
+
   # @cherrypy.expose
   # def configUpdate(self, http_host='0.0.0.0', http_username=None, http_port=8181, http_password=None, launch_browser=0,
   #   sab_host=None, sab_username=None, sab_apikey=None, sab_password=None, sab_category=None, download_dir=None, blackhole=0, blackhole_dir=None,

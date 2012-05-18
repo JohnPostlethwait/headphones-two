@@ -1,5 +1,6 @@
 import cherrypy
 import os
+import signal
 import sys
 
 from logger import logger
@@ -13,7 +14,7 @@ def start(options={}):
     'server.thread_pool': 10,
     'server.socket_port': int(options['http_port']),
     'server.socket_host': options['http_host'],
-    'engine.autoreload_on': False })
+    'engine.autoreload_on': True })
 
   config = {
     '/': {
@@ -60,3 +61,5 @@ def start(options={}):
     logger.error('Cannot start Headphones. Port %s is already in use.' % options['http_port'])
 
     sys.exit(0)
+
+  cherrypy.engine.block()

@@ -1,3 +1,4 @@
+import signal
 import sys
 
 from lib.apscheduler.scheduler import Scheduler
@@ -25,7 +26,7 @@ scheduler = Scheduler()
 
 # Start the webserver itself.
 webserver.start({
-    'http_port':        config.webserver.http_post,
+    'http_port':        config.webserver.http_port,
     'http_host':        config.webserver.http_host,
     'http_username':    config.webserver.http_username,
     'http_password':    config.webserver.http_password})
