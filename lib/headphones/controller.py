@@ -412,7 +412,6 @@ class Controller(object):
   # 
   #   raise cherrypy.HTTPRedirect("config")
   # 
-  # 
   # @cherrypy.expose
   # def shutdown(self):
   #   headphones.SIGNAL = 'shutdown'
@@ -420,14 +419,13 @@ class Controller(object):
   # 
   #   return self.serve_template("shutdown.html", title="Shutting Down", message=message, timer=15)
   # 
-  # 
   # @cherrypy.expose
+  # @server_restart
   # def restart(self):
   #   headphones.SIGNAL = 'restart'
   #   message = 'Restarting in 30 Seconds&hellip;'
   # 
   #   return self.serve_template("shutdown.html", title="Restarting", message=message, timer=30)
-  # 
   # 
   # @cherrypy.expose
   # def update(self):
