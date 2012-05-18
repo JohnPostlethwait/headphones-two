@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
 <%inherit file="base.html"/>
 <%!
-  from headphones import helpers
+  import time
+
+  from lib.headphones import helpers
 %>
 
 <%def name="body()">
@@ -14,19 +17,17 @@
         </tr>
       </thead>
       <tbody>
-      %for line in lineList:
+      %for line in log_lines:
         <%
-          timestamp, message, level, threadname = line
-        
-          if level == 'WARNING' or level == 'ERROR':
+          if line['level'] == 'WARNING' or line['level'] == 'ERROR':
             grade = 'X'
           else:
             grade = 'Z'
         %>
           <tr class="grade${grade}">
-            <td id="timestamp">${timestamp}</td>
-            <td id="level">${level}</td>
-            <td id="message">${message}</td>
+            <td id="timestamp">${time.strftime('%H:%M:%S %B %d %Y', line['timestamp'])}</td>
+            <td id="level">${line['level']}</td>
+            <td id="message">${line['message']}</td>
           </tr>
       %endfor
       </tbody>
@@ -41,10 +42,13 @@
 <%def name="javascriptIncludes()">
   <script src="/js/lib/jquery.dataTables.min.js"></script>
   <script>
-  $(document).ready(function()
-  {
-    $('#log_table').dataTable(
-      {
+  $(document).ready(function() {
+    $('#log_table').dataTable( {
+        "aoColumns": [
+          { "sType": "date" },
+          null,
+          null
+        ],
         "oLanguage": {
           "sLengthMenu":"Show _MENU_ lines per page",
           "sEmptyTable": "No log information available",
@@ -55,8 +59,7 @@
         "iDisplayLength": 100,
         "sPaginationType": "full_numbers",
         "aaSorting": []
-
       });
-  });
+    });
   </script>
 </%def>

@@ -18,7 +18,6 @@
   <form action="markAlbums" method="get">
     <input type="hidden" name="ArtistID" value=${artist.id}>
     <div class="table_wrapper table_sorting">
-      <img class="left" height="50" src="artist['artist_small_image_url']" alt="${artist.name}" />
       <h1 class="left">${artist.name}</h1>
 
       %if artist.state == 'loading':
@@ -62,22 +61,12 @@
           %>
 
           <%
-            # total_tracks = db.DBConnection().action('SELECT COUNT(*) as count FROM tracks WHERE album_id=?', [album['album_id']]).fetchone()
-            # total_tracks = total_tracks['count']
-          %>
+            try:
+              percent = (album.obtained_track_count() * 100.0) / album.track_count()
 
-          <%
-            # obtained_tracks = db.DBConnection().action('SELECT COUNT(*) AS count FROM tracks WHERE album_id=? AND track_location IS NOT NULL', [album['album_id']]).fetchone()
-            # obtained_tracks = obtained_tracks['count']
-          %>
-
-          <%
-            # try:
-            #   percent = (obtained_tracks * 100.0) / total_tracks
-            # 
-            #   if percent > 100: percent = 100
-            # except (ZeroDivisionError, TypeError):
-            #   percent = 0
+              if percent > 100: percent = 100
+            except (ZeroDivisionError, TypeError):
+              percent = 0
           %>
           <tr class="grade${grade}">
             <td id="select">
@@ -85,7 +74,7 @@
             </td>
 
             <td id="albumart">
-              <img src="album.image_url" height="50" width="50">
+              <img src="http://images.amazon.com/images/P/${album.asin}.01.SCLZZZZZZZ.jpg" height="50" width="50" alt="${album.name}">
             </td>
 
             <td id="albumname">
@@ -112,10 +101,11 @@
             </td>
 
             <td id="have">
-              <span title="percent}"><span>
+              <span title="${percent}"><span>
               <div class="progress-container">
-                <div style="width:0%">
-                  <div class="havetracks"></div>
+                <div style="width:${percent}%;">
+                  <div class="havetracks">${album.obtained_track_count()}/${album.track_count()}
+                  </div>
                 </div>
               </div>
             </td>

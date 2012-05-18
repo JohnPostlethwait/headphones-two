@@ -23,9 +23,10 @@
 <%def name="body()">
   <div class="table_wrapper">
     <div id="albumheader">
-      <img src="http://ec1.images-amazon.com/images/P/${album.asin}.01.LZZZZZZZ.jpg" height="200" width="200" alt="albumart" class="albumArt">
+      <img src="http://images.amazon.com/images/P/${album.asin}.jpg" height="200" width="200" alt="albumart" class="albumArt">
       <h1>${album.name}</h1>
       <h2><a href="artist?id=${album.artist.id}">${album.artist.name}</a></h2>
+      <br>
       <br>
       <h3>Tracks: ${album.track_count()}</h3>
       <h3>Duration: ${helpers.convert_milliseconds(album.duration())}</h3>

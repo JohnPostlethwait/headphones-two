@@ -38,7 +38,7 @@ class Artist(peewee.Model):
     num_tracks = 0
 
     for album in self.albums():
-      num_tracks += album.obtained_tracks_count()
+      num_tracks += album.obtained_track_count()
 
     return num_tracks
 
@@ -61,7 +61,7 @@ class Album(peewee.Model):
   added_on =          peewee.DateTimeField(default=datetime.now)
   updated_on =        peewee.DateTimeField(default=datetime.now)
 
-  def obtained_tracks_count(self):
+  def obtained_track_count(self):
     num_obtained = Track.select().where(album_id=self.id, location="IS NOT NULL").count()
 
     return num_obtained

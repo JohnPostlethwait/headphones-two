@@ -3,8 +3,7 @@ import threading
 import time
 
 import cherrypy
-
-from logger import logger
+import logger
 
 from models import Album
 from models import Artist
@@ -323,13 +322,15 @@ class Controller(object):
   #   history = self.database.select('SELECT * FROM snatched ORDER BY DateAdded DESC')
   # 
   #   return self.serve_template("history.html", title="History", history=history)
-  # 
-  # 
-  # @cherrypy.expose
-  # def logs(self):
-  #   return self.serve_template("logs.html", title="Log", lineList=headphones.LOG_LIST)
-  # 
-  # 
+
+  @cherrypy.expose
+  def logs(self):
+    sectioned_log = []
+    for line in logger.read_log():
+      sectioned_log.append(logger.disect_line(line))
+
+    return self.serve_template("logs.html", title="Log", log_lines=sectioned_log)
+
   # @cherrypy.expose
   # def clearhistory(self, type=None):
   #   if type == 'all':

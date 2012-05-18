@@ -116,7 +116,7 @@ def addArtist(id3_artist_name, path):
   return artist
 
 
-def addReleases( artist_id, update_artist = True ):
+def addReleases(artist_id, update_artist = True):
   artist_record = Artist.get(id=artist_id)
   musicbrainz_artist = musicbrainz.getBestArtistMatch(artist_record.name)
   release_ids = []
@@ -145,7 +145,7 @@ def addReleases( artist_id, update_artist = True ):
         release_group_id = release_group_id,
         artist_id = artist_id,
         name = release.getTitle(),
-        type = 'album',
+        type = release.getType(),
         released_on = release.getEarliestReleaseDate(),
         state = 'wanted')
 
