@@ -12,7 +12,8 @@ sys.dont_write_bytecode = True
 
 
 # Check the versions of various updateable things.
-versionchecker.Database.check()
+versionchecker.Database.update()
+versionchecker.Git.check()
 
 # Start up the various scheduled jobs.
 scheduler = Scheduler()

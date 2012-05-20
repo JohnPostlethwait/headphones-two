@@ -95,4 +95,14 @@ class Track(peewee.Model):
   added_on =    peewee.DateTimeField(default=datetime.now)
 
 
+class HeadphonesVersion(peewee.Model):
+  id = peewee.PrimaryKeyField()
+  local_revision = peewee.CharField()
+  remote_revision = peewee.CharField()
+  checked_on = peewee.DateTimeField(default=datetime.now)
+
+  @classmethod
+  def latest_check(cls):
+    return cls.select().order_by(('checked_on', 'desc')).limit(1).execute().first()
+
 peewee.database.connect()

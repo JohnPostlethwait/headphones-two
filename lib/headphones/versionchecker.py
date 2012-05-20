@@ -1,34 +1,33 @@
-import datetime
 import re
 import subprocess
-
 import models
 
+from datetime import datetime
 from logger import logger
 
 
 class Git(object):
-  local_version = None
-  remote_version = None
-  last_check = None
+  @classmethod
+  def last_scan(cls):
+    return models.HeadphonesVersion.latest_check()
 
   @classmethod
-  def check(cls):
-    if not cls.last_check or check_ago.days > 0 or check_ago.seconds > 43200:
+  def check(cls, force=False):
+    checked_ago = None
+
+    if cls.last_scan():
+      checked_ago = datetime.now() - cls.last_scan().checked_on
+
+    if force or not checked_ago or checked_ago.days > 0 or checked_ago.seconds > 43200:
       git_command_local = 'git rev-parse HEAD'.split()
       git_command_remote = 'git ls-remote origin'.split()
 
       local_check = subprocess.Popen(git_command_local, stdout=subprocess.PIPE)
       remote_check = subprocess.Popen(git_command_remote, stdout=subprocess.PIPE)
 
-      cls.local_version = local_check.communicate()[0].split('\n')[0]
-      cls.remote_version = remote_check.communicate()[0].split('\n')[0].split('\t')[0]
-
-    if cls.local_version and cls.local_version == cls.remote_version:
-      return True
-    else:
-      return False
-
+      models.HeadphonesVersion.create(
+          local_revision = local_check.communicate()[0].split('\n')[0],
+          remote_revision = remote_check.communicate()[0].split('\n')[0].split('\t')[0])
 
   @classmethod
   def commits_behind(cls):
@@ -50,11 +49,13 @@ class Git(object):
 
   @classmethod
   def update(cls):
-    if not cls.local_version or not cls.remote_version:
-      cls.check()
+    if not cls.last_scan(): cls.check()
 
-    if cls.local_version != cls.remote_version:
+    if cls.last_scan().local_revision != cls.last_scan().remote_revision:
+      logger.debug('Code-base is out of date, updating now...')
+
       git_command = 'git pull origin master'.split()
+
       process = subprocess.Popen(git_command, stdout=subprocess.PIPE)
 
     return True
@@ -62,8 +63,8 @@ class Git(object):
 
 class Database(object):
   @classmethod
-  def check(cls):
-    for model in (models.Album, models.Artist, models.Track,):
+  def update(cls):
+    for model in (models.Album, models.Artist, models.Track, models.HeadphonesVersion,):
       logger.debug(u"Checking if the %ss table exists..." % model.__name__)
 
       if not model.table_exists():
@@ -72,4 +73,3 @@ class Database(object):
         model.create_table()
       else:
         logger.debug(u"The %ss table exists, moving on." % model.__name__)
-
