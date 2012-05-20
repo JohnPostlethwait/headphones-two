@@ -1,28 +1,21 @@
 import os
+import sys
 import threading
 import time
 
 import cherrypy
 import logger
 
+from mako.template import Template
+from mako.lookup import TemplateLookup
+from mako import exceptions
+
 from models import Album
 from models import Artist
 from models import Track
 
 from lib.headphones import *
-
-# from headphones import searcher
-# from headphones import librarysync
-# from headphones import importer
-# from headphones import mb
-# from headphones import lastfm
-
-from mako.template import Template
-from mako.lookup import TemplateLookup
-from mako import exceptions
-
-# from headphones.helpers import checked
-# from headphones.helpers import radio
+from lib.headphones import versionchecker
 
 
 class Controller(object):
@@ -411,30 +404,27 @@ class Controller(object):
   #   headphones.config_write()
   # 
   #   raise cherrypy.HTTPRedirect("config")
-  # 
-  # @cherrypy.expose
-  # def shutdown(self):
-  #   headphones.SIGNAL = 'shutdown'
-  #   message = 'Shutting Down...'
-  # 
-  #   return self.serve_template("shutdown.html", title="Shutting Down", message=message, timer=15)
-  # 
-  # @cherrypy.expose
-  # @server_restart
-  # def restart(self):
-  #   headphones.SIGNAL = 'restart'
-  #   message = 'Restarting in 30 Seconds&hellip;'
-  # 
-  #   return self.serve_template("shutdown.html", title="Restarting", message=message, timer=30)
-  # 
-  # @cherrypy.expose
-  # def update(self):
-  #   headphones.SIGNAL = 'update'
-  #   message = 'Updating&hellip;'
-  # 
-  #   return self.serve_template("shutdown.html", title="Updating", message=message, timer=120)
-  # 
-  # 
+
+  @cherrypy.expose
+  def shutdown(self):
+    cherrypy.engine.stop()
+    sys.exit(0)
+
+    return self.serve_template("shutdown.html", title="Shutting Down", timer=0, stop_refresh=True)
+
+  @cherrypy.expose
+  def restart(self):
+    cherrypy.engine.restart()
+
+    return self.serve_template("shutdown.html", title="Restarting", timer=15, stop_refresh=False)
+
+  @cherrypy.expose
+  def update(self):
+    versionchecker.Git().update()
+    cherrypy.engine.restart()
+
+    return self.serve_template("shutdown.html", title="Updating", timer=30, stop_refresh=False)
+
   # @cherrypy.expose
   # def suggestions(self):
   #   cloudlist = self.database.select('SELECT * FROM lastfmcloud')

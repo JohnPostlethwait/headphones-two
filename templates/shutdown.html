@@ -1,13 +1,21 @@
 <%inherit file="base.html"/>
 
 <%def name="headIncludes()">
-  <meta http-equiv="refresh" content="${timer};url=index">
+  % if not stop_refresh:
+    <meta http-equiv="refresh" content="${timer};url=/" />
+  % endif
 </%def>
 
 <%def name="body()">
   <div class="table_wrapper">
     <div id="shutdown">
-    <h1>Headphones is ${message}</h1>
+      <h1>Headphones is ${title}</h1>
+
+      % if not stop_refresh:
+        <p>
+          Please wait ${timer} seconds&hellip;
+        </p>
+      % endif
     </div>
   </div>
 </%def>
