@@ -13,6 +13,7 @@ from mako import exceptions
 from models import Album
 from models import Artist
 from models import Track
+from models import LastFMSuggestion
 
 from lib.headphones import *
 from lib.headphones import versionchecker
@@ -425,13 +426,12 @@ class Controller(object):
 
     return self.serve_template("shutdown.html", title="Updating", timer=30, stop_refresh=False)
 
-  # @cherrypy.expose
-  # def suggestions(self):
-  #   cloudlist = self.database.select('SELECT * FROM lastfmcloud')
-  # 
-  #   return self.serve_template("suggestions.html", title="Extras", cloudlist=cloudlist)
-  # 
-  # 
+  @cherrypy.expose
+  def suggestions(self):
+    suggestions = LastFMSuggestion.select().execute()
+
+    return self.serve_template("suggestions.html", title="Suggestions From LastFM", suggestions=suggestions)
+
   # @cherrypy.expose
   # def addReleaseById(self, rid):
   #   threading.Thread(target=importer.addReleaseById, args=[rid]).start()

@@ -95,6 +95,16 @@ class Track(peewee.Model):
   added_on =    peewee.DateTimeField(default=datetime.now)
 
 
+class LastFMSuggestion(peewee.Model):
+  id = peewee.PrimaryKeyField()
+  musicbrainz_id = peewee.CharField()
+  artist_name = peewee.CharField()
+  url = peewee.CharField()
+  streamable = peewee.BooleanField()
+  image = peewee.TextField()
+  added_on = peewee.DateTimeField(default=datetime.now)
+
+
 class HeadphonesVersion(peewee.Model):
   id = peewee.PrimaryKeyField()
   local_revision = peewee.CharField()
@@ -104,5 +114,6 @@ class HeadphonesVersion(peewee.Model):
   @classmethod
   def latest_check(cls):
     return cls.select().order_by(('checked_on', 'desc')).limit(1).execute().first()
+
 
 peewee.database.connect()

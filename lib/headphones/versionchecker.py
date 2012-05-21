@@ -64,7 +64,8 @@ class Git(object):
 class Database(object):
   @classmethod
   def update(cls):
-    for model in (models.Album, models.Artist, models.Track, models.HeadphonesVersion,):
+    for model in (models.Album, models.Artist, models.Track,
+        models.HeadphonesVersion, models.LastFMSuggestion,):
       logger.debug(u"Checking if the %ss table exists..." % model.__name__)
 
       if not model.table_exists():

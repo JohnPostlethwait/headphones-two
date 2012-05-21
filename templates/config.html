@@ -43,16 +43,16 @@
   </div>
 
   <div class="table_wrapper">
-    <h1><img src="images/last.fm.png"> Import Artists From Last.FM</h1>
+    <h1><img src="images/last.fm.png"> Import Recommendations From Last.FM</h1>
 
-    <p>Enter the username whose artists you want to import:</p>
+    <p>Enter the username whose artist recommendations you want to import:</p>
 
     <form action="importLastFM" method="get">
       <label for="username">Last.FM Username</label>
       %if config.lastfm.username:
-      <input type="text" id="username" value="${config.lastfm.username}" name="username" />
+        <input type="text" id="username" value="${config.lastfm.username}" name="username" />
       %else:
-      <input type="text" id="username" name="username" />
+        <input type="text" id="username" name="username" />
       %endif
       <br />
       <br />
