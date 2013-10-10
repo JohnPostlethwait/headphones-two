@@ -145,7 +145,7 @@
       <h1><img src="images/providers.png"> Search Providers</h1>
 
       <fieldset>
-        <legend>NZBMatrix</legend>
+        <legend><img src="images/nzbmatrix.png"> NZBMatrix</legend>
 
         <input type="checkbox" id="nzbmatrix" name="nzbmatrix" value="1" ${config.nzbmatrix.enabled} />
         <label for="nzbmatrix">Use NZBMatrix</label>
@@ -153,10 +153,10 @@
         <label for="nzbmatrix_username">NZBMatrix Username</label>
         <input type="text" id="nzbmatrix_username" name="nzbmatrix_username" value="${config.nzbmatrix.username}" maxlength="40" />
         <br />
-        <label for="nzbmatrix_apikey">NZBMatrix API</label>
+        <label for="nzbmatrix_apikey">NZBMatrix API Key</label>
         <input type="text" id="nzbmatrix_apikey" name="nzbmatrix_apikey" value="${config.nzbmatrix.api_key}" maxlength="40" />
       </fieldset>
-
+<!--
       <fieldset>
         <legend>Newznab</legend>
 
@@ -196,6 +196,7 @@
         <label for="newzbin_password">Newzbin Password</label>
         <input type="text" id="newzbin_password" name="newzbin_password" value="${config.newzbin.password}" maxlength="40" />
       </fieldset>
+-->
     </div>
 
     <div class="table_wrapper center">
